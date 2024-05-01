@@ -6,37 +6,79 @@ class Persona{
     -direccion : Direccion
     -edad : Int
     -sexo : String
-    -viaje : Viaje
+    -activo: Boolean
 }
 
-class Viaje{
+class Tramo {
     -direccionActual : Direccion
     -direccionFinal : Direccion
-    -cuidadores : List <Persona>
-    -estadoViaje : IEstado
-    -reaccion : Reaccion
-    -demoraAprox : Float
-    -distancia : ICalcularDistancia
+    -tiempoDetenido: Float
+
+    +calcularTiempoDetenido(): Float
 }
 
-class Direccion{
+class Viaje {
+    -tramos: List<Tramo>
+    -cuidadoresDeseados : List <Persona>
+    -cuidadoresAceptados : List <Persona>
+    -transeunte: Persona
+    -demoraAproximada : Float
+    -notificaraEstado: Boolean
+    -reaccion : IReaccion
+    -estadoViaje : Estado
+
+    +calcularDemoraAproximada(tramos: List<Tramo>, calcularDistancia: ICalcularDistancia)
+    +comenzar(): void
+    +finalizar(): void
+    +verificarDemora(): void
+}
+
+class Direccion {
     -calle : String
     -altura : Int
+    -ubicacion: Ubicacion
 }
 
-interface IEstado{
-    +manejarNotificaciones(Viaje) : void
+class Ubicacion {
+    -latitud: float
+    -longuitud: float
 }
 
-class EnRumbo{
-    +manejarNotificaciones(Viaje) : void
+abstract class Estado{
+    +comenzar(Viaje): void
+    +reanudar(Viaje): void
+    +detener(Viaje): void
+    +verificarDemora(Viaje): void
+    +notificarCuidadores(Viaje): void
+    +manejarNotificaciones(Viajero) : void
+}
+
+class EnEspera {
+    +comenzar(Viaje): void
+}
+
+class EnRumbo {
+    +manejarNotificaciones(Viajero) : void
+    +detener(Viaje): void
+    +finalizar(Viaje): void
+    +verificarDemora(Viaje): void
+}
+
+class EnPeligro {
+    +verificarDemora(Viaje): void
+    +finalizar(Viaje): void
+}
+
+class Detenido {
+    +reanudar(Viaje)
+    +finalizar(Viaje): void
 }
 
 class Arribado{
-    +manejarNotificaciones(Viaje) : void
+    +notificarCuidadores(Viaje): void
 }
 
-interface Reaccion{
+interface IReaccion{
     +reaccionar(Viaje) : void
 }
 
@@ -59,35 +101,47 @@ class EsperarMinutos{
 interface ICalcularDistancia{
     +CalcularDistancia(Direccion, Direccion) : Float
 }
+
 class CalcularDistancia{
     -api : DistanceMatrixAPI
     +calcularDistancia(Direccion, Direccion) : Float
 }
+
 class DistanceMatrixAPI{
     +calcularDistancia(Direccion, Direccion) : Float
 }
 
 
-
-Persona *-- Viaje
+Viaje "1" --> "many" Persona
+Viaje "1" --> "many" Tramo
 
 Persona --> Direccion
-Viaje --> Direccion
+Tramo --> Direccion
 
-Viaje --> IEstado
-EnRumbo ..|> IEstado
-Arribado ..|> IEstado
-EnRumbo ..> Arribado
-Arribado ..> EnRumbo
+Direccion --> Ubicacion
 
-Viaje --> Reaccion
-AlertarCuidadores ..|>Reaccion
-LlamarPolicia ..|> Reaccion
-LlamarUsuario ..|> Reaccion
-EsperarMinutos ..|> Reaccion
+
+Viaje --> Estado
+EnRumbo --|> Estado
+Arribado --|> Estado
+EnEspera --|> Estado
+EnPeligro --|> Estado
+EnRumbo ..> Detenido
+EnRumbo ..> EnPeligro
+Detenido ..> EnRumbo
+EnEspera ..> EnRumbo
+Detenido ..> Arribado
+EnPeligro ..> Arribado
+
+Viaje --> IReaccion
+AlertarCuidadores ..|> IReaccion
+LlamarPolicia ..|> IReaccion
+LlamarUsuario ..|> IReaccion
+EsperarMinutos ..|> IReaccion
 
 Viaje --> ICalcularDistancia
 CalcularDistancia ..|> ICalcularDistancia
 CalcularDistancia --> DistanceMatrixAPI
 
+ICalcularDistancia ..|> Direccion
 @enduml

@@ -1,0 +1,16 @@
+Persona
+Utilizamos 2 listas de cuidadores, uno para saber quienes deseamos y otra para saber quienes aceptaron.
+Decidimos usar una clase Persona y no separarlo en clases Transeunte y Cuidador heredando de una clase padre, ya que un Transeunte puede convertirse en Cuidador y viceversa.
+Usamos un atributo "activo" para identificar si su estado actual es de Transeunte o Cuidador
+
+Viaje
+Utilizamos una lista de Tramos ya que en el punto 2.2 se pide que el viaje pueda contener varias paradas
+El notificaraEstado dentro de la clase Viaje se utilizara para saber si el usuario notificará su estado al finalizar cada tramo
+
+Utilizamos un metodo calcularDemoraAproximada donde se implementa una interfaz ICalcularDistancia
+
+
+Patrones
+Utilizamos un Strategy para la reaccion que configuro el usuario en caso de que pase algo malo ya que nos permite aplicar logica distinta para cada tipo de reaccion sin la necesidad de saber como lo hace, solo necesitamos saber el que hace.
+Utilizamos un State para los Estados del viaje ya que el metodo manejarNotificaciones tiene un comportamiento distinto cuando el Transeunte esta en viaje. Ademas, un viaje va pasando por distintos estados en los que se maneja logica distinta y este patron nos facilita la forma de pasar entre ellos.
+Utilizamos un Adapter para calcular ya que nos permite desacoplarnos de la implementacion de Google para el caso de que decidamos cambiar la forma de implementarnos.
