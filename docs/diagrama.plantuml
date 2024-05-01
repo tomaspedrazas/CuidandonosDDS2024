@@ -13,10 +13,10 @@ class Viaje{
     -direccionActual : Direccion
     -direccionFinal : Direccion
     -cuidadores : List <Persona>
-    -estadoViaje : Estado
+    -estadoViaje : IEstado
     -reaccion : Reaccion
     -demoraAprox : Float
-    -distancia : InterfaceCalcularDistancia
+    -distancia : ICalcularDistancia
 }
 
 class Direccion{
@@ -24,7 +24,7 @@ class Direccion{
     -altura : Int
 }
 
-interface Estado{
+interface IEstado{
     +manejarNotificaciones(Viaje) : void
 }
 
@@ -56,7 +56,7 @@ class EsperarMinutos{
     +reaccionar(Viaje) : void
 }
 
-interface InterfaceCalcularDistancia{
+interface ICalcularDistancia{
     +CalcularDistancia(Direccion, Direccion) : Float
 }
 class CalcularDistancia{
@@ -74,9 +74,9 @@ Persona *-- Viaje
 Persona --> Direccion
 Viaje --> Direccion
 
-Viaje --> Estado
-EnRumbo ..|> Estado
-Arribado ..|> Estado
+Viaje --> IEstado
+EnRumbo ..|> IEstado
+Arribado ..|> IEstado
 EnRumbo ..> Arribado
 Arribado ..> EnRumbo
 
@@ -86,8 +86,8 @@ LlamarPolicia ..|> Reaccion
 LlamarUsuario ..|> Reaccion
 EsperarMinutos ..|> Reaccion
 
-Viaje --> InterfaceCalcularDistancia
-CalcularDistancia ..|> InterfaceCalcularDistancia
+Viaje --> ICalcularDistancia
+CalcularDistancia ..|> ICalcularDistancia
 CalcularDistancia --> DistanceMatrixAPI
 
 @enduml
