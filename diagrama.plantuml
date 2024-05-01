@@ -1,0 +1,93 @@
+@startuml Diagrama Cuidandonos
+
+class Persona{
+    -nombre : String
+    -apellido : String
+    -direccion : Direccion
+    -edad : Int
+    -sexo : String
+    -viaje : Viaje
+}
+
+class Viaje{
+    -direccionActual : Direccion
+    -direccionFinal : Direccion
+    -cuidadores : List <Persona>
+    -estadoViaje : Estado
+    -reaccion : Reaccion
+    -demoraAprox : Float
+    -distancia : InterfaceCalcularDistancia
+}
+
+class Direccion{
+    -calle : String
+    -altura : Int
+}
+
+interface Estado{
+    +manejarNotificaciones(Viaje) : void
+}
+
+class EnRumbo{
+    +manejarNotificaciones(Viaje) : void
+}
+
+class Arribado{
+    +manejarNotificaciones(Viaje) : void
+}
+
+interface Reaccion{
+    +reaccionar(Viaje) : void
+}
+
+class AlertarCuidadores{
+    +reaccionar(Viaje) : void
+}
+
+class LlamarPolicia{
+    +reaccionar(Viaje) : void
+}
+
+class LlamarUsuario{
+    +reaccionar(Viaje) : void
+}
+
+class EsperarMinutos{
+    +reaccionar(Viaje) : void
+}
+
+interface InterfaceCalcularDistancia{
+    +CalcularDistancia(Direccion, Direccion) : Float
+}
+class CalcularDistancia{
+    -api : DistanceMatrixAPI
+    +calcularDistancia(Direccion, Direccion) : Float
+}
+class DistanceMatrixAPI{
+    +calcularDistancia(Direccion, Direccion) : Float
+}
+
+
+
+Persona *-- Viaje
+
+Persona --> Direccion
+Viaje --> Direccion
+
+Viaje --> Estado
+EnRumbo ..|> Estado
+Arribado ..|> Estado
+EnRumbo ..> Arribado
+Arribado ..> EnRumbo
+
+Viaje --> Reaccion
+AlertarCuidadores ..|>Reaccion
+LlamarPolicia ..|> Reaccion
+LlamarUsuario ..|> Reaccion
+EsperarMinutos ..|> Reaccion
+
+Viaje --> InterfaceCalcularDistancia
+CalcularDistancia ..|> InterfaceCalcularDistancia
+CalcularDistancia --> DistanceMatrixAPI
+
+@enduml
