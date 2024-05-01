@@ -1,3 +1,3 @@
 Hecho por:
 - Juan Martin Villagra
-- Tomas Pedraza
+- Tomas Pedrazas
